@@ -80,6 +80,11 @@ public class AdministratorController {
         // バリデーションエラーがある場合は登録画面に戻る
         return "administrator/insert";
     }
+	if (!form.getPassword().equals(form.getConfirmPassword())) {
+        // パスワードと確認用パスワードが一致しない場合はエラーメッセージを表示
+        model.addAttribute("errorMessages", "パスワードと確認用パスワードが一致しません");
+        return "administrator/insert";
+    }
 	boolean emailExists = administratorService.emailExists(form.getMailAddress());
     if (emailExists) {
         model.addAttribute("errorMessage", "このEメールアドレスは既に登録されています");
