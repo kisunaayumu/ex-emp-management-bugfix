@@ -40,4 +40,15 @@ public class AdministratorService {
 		Administrator administrator = administratorRepository.findByMailAddressAndPassward(mailAddress, password);
 		return administrator;
 	}
+
+	/**
+     * 指定されたEメールアドレスを持つ管理者が存在するかどうかをチェックします.
+     * 
+     * @param mailAddress メールアドレス
+     * @return 管理者が存在する場合はtrue、存在しない場合はfalse
+     */
+    public boolean emailExists(String mailAddress) {
+        Administrator administrator = administratorRepository.findByMailAddress(mailAddress);
+        return administrator != null;
+    }
 }
