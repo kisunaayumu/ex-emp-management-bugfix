@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+
 import com.example.domain.Administrator;
 import com.example.form.InsertAdministratorForm;
 import com.example.form.LoginForm;
@@ -74,9 +75,14 @@ public class AdministratorController {
 	 * @return ログイン画面へリダイレクト
 	 */
 	@PostMapping("/insert")
-	public String insert(@Validated InsertAdministratorForm form, BindingResult bindingResult) {
+	public String insert(@Validated InsertAdministratorForm form, BindingResult bindingResult,Model model) {
     if (bindingResult.hasErrors()) {
         // バリデーションエラーがある場合は登録画面に戻る
+        return "administrator/insert";
+    }
+	boolean emailExists = administratorService.emailExists(form.getMailAddress());
+    if (emailExists) {
+        model.addAttribute("errorMessage", "このEメールアドレスは既に登録されています");
         return "administrator/insert";
     }
 
