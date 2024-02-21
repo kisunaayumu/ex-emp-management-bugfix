@@ -1,5 +1,6 @@
 package com.example.controller;
 
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,8 @@ public class EmployeeController {
 	@Autowired
 	private EmployeeService employeeService;
 
+	
+
 	/**
 	 * 使用するフォームオブジェクトをリクエストスコープに格納する.
 	 * 
@@ -49,10 +52,10 @@ public class EmployeeController {
 	 * @return 従業員一覧画面
 	 */
 	@GetMapping("/showList")
-	public String showList(Model model) {
-		List<Employee> employeeList = employeeService.showList();
-		model.addAttribute("employeeList", employeeList);
-		return "employee/list";
+	public String showList(Model model){
+	List<Employee> employeeList = employeeService.showList();
+	model.addAttribute("employeeList", employeeList);
+	return "employee/list";
 	}
 
 	/////////////////////////////////////////////////////
