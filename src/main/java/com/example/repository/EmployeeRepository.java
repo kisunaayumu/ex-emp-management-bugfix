@@ -99,6 +99,8 @@ public class EmployeeRepository {
 	}
 
 	public List<Employee> findWithPagination(int offset, int limit) {
+		offset = Math.max(offset, 0);
+		
 		String sql = "SELECT id,name,image,gender,hire_date,mail_address,zip_code,address,telephone,salary,characteristics,dependents_count FROM employees ORDER BY hire_date ASC LIMIT :limit OFFSET :offset";
 	
 		SqlParameterSource param = new MapSqlParameterSource()

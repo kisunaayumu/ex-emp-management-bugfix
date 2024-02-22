@@ -138,18 +138,19 @@
           <div class="row">
             <div class="col-md-12 text-center">
                 <ul class="pagination">
-                    <li th:class="${currentPage == 1} ? disabled : ''">
-                        <a th:href="@{/employee/showList(page=${currentPage - 1}, size=${size})}">前へ</a>
+                    <li th:class="${currentPage != null && currentPage == 1} ? disabled : ''">
+                        <a th:href="@{/employee/showList(page=${currentPage != null ? currentPage - 1 : 0}, size=${size})}">前へ</a>
                     </li>
-                    <li th:each="pageNumber : ${#numbers.sequence(1, totalPages)}"
+                    <li th:each="pageNumber : ${totalPages != null ? #numbers.sequence(1, totalPages) : #numbers.sequence(1, 1)}"
                         th:class="${pageNumber == currentPage} ? active : ''">
                         <a th:href="@{/employee/showList(page=${pageNumber}, size=${size})}" th:text="${pageNumber}"></a>
                     </li>
-                    <li th:class="${currentPage == totalPages} ? disabled : ''">
-                        <a th:href="@{/employee/showList(page=${currentPage + 1}, size=${size})}">次へ</a>
+                    <li th:class="${currentPage != null && currentPage == totalPages} ? disabled : ''">
+                        <a th:href="@{/employee/showList(page=${currentPage != null ? currentPage + 1 : 0}, size=${size})}">次へ</a>
                     </li>
                 </ul>
             </div>
+        </div>
 
           <!-- ここから下を編集する必要はありません -->
         </div>
