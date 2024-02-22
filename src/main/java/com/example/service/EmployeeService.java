@@ -3,6 +3,7 @@ package com.example.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,6 +55,16 @@ public class EmployeeService {
 	}
 
 	public List<Employee> findByNameContaining(String name) {
-        return employeeRepository.findByNameContaining(name);
+		return employeeRepository.findByNameContaining(name);
+	}
+
+	public List<Employee> showList(int page, int size) {
+		int offset = (page - 1) * size;
+		return employeeRepository.findWithPagination(offset, size);
+	}
+
+	public int getTotalPages(int size) {
+        return employeeRepository.getTotalPages(size);
     }
+
 }

@@ -135,6 +135,22 @@
             </tbody>
           </table>
 
+          <div class="row">
+            <div class="col-md-12 text-center">
+                <ul class="pagination">
+                    <li th:class="${currentPage == 1} ? disabled : ''">
+                        <a th:href="@{/employee/showList(page=${currentPage - 1}, size=${size})}">前へ</a>
+                    </li>
+                    <li th:each="pageNumber : ${#numbers.sequence(1, totalPages)}"
+                        th:class="${pageNumber == currentPage} ? active : ''">
+                        <a th:href="@{/employee/showList(page=${pageNumber}, size=${size})}" th:text="${pageNumber}"></a>
+                    </li>
+                    <li th:class="${currentPage == totalPages} ? disabled : ''">
+                        <a th:href="@{/employee/showList(page=${currentPage + 1}, size=${size})}">次へ</a>
+                    </li>
+                </ul>
+            </div>
+
           <!-- ここから下を編集する必要はありません -->
         </div>
       </div>

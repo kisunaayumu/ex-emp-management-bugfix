@@ -51,18 +51,22 @@ public class EmployeeController {
 	/////////////////////////////////////////////////////
 	/**
 	 * 従業員一覧画面を出力します.
-	 * 
+	 * ページング機能追加
 	 * @param model モデル
 	 * @return 従業員一覧画面
 	 */
 	@GetMapping("/showList")
-	public String showList(Model model){
-	List<Employee> employeeList = employeeService.showList();
-	model.addAttribute("employeeList", employeeList);
+	public String showList(@RequestParam(name = "page", defaultValue = "1") int page,@RequestParam(name = "size", defaultValue = "10") int size,Model model){
+    List<Employee> employeeList = employeeService.showList(page, size);
+    model.addAttribute("employeeList", employeeList);
 
-	String username = (String) session.getAttribute("username");
+	int totalPages = employeeService.getTotalPages(size);
+    model.addAttribute("currentPage", page);
+    model.addAttribute("totalPages", totalPages);
+
+    String username = (String) session.getAttribute("username");
     model.addAttribute("username", username);
-	return "employee/list";
+    return "employee/list";
 	}
 
 	//曖昧検索機能追加
@@ -86,7 +90,7 @@ public class EmployeeController {
     }
     model.addAttribute("employeeList", employees);
     return "employee/list";
-}
+	}
 
 	/////////////////////////////////////////////////////
 	// ユースケース：従業員詳細を表示する

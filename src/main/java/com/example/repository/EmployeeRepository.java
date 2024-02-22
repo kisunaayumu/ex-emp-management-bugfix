@@ -96,5 +96,22 @@ public class EmployeeRepository {
     List<Employee> employees = template.query(sql, param, EMPLOYEE_ROW_MAPPER);
 
     return employees;
-}
+	}
+
+	public List<Employee> findWithPagination(int offset, int limit) {
+		String sql = "SELECT id,name,image,gender,hire_date,mail_address,zip_code,address,telephone,salary,characteristics,dependents_count FROM employees ORDER BY hire_date ASC LIMIT :limit OFFSET :offset";
+	
+		SqlParameterSource param = new MapSqlParameterSource()
+			.addValue("limit", limit)
+			.addValue("offset", offset);
+	
+		return template.query(sql, param, EMPLOYEE_ROW_MAPPER);
+	}
+
+	public int getTotalPages(int size) {
+		String countSql = "SELECT COUNT(*) FROM employees";
+		int totalEmployees = template.queryForObject(countSql, new MapSqlParameterSource(), Integer.class);
+		return (int) Math.ceil((double) totalEmployees / size);
+	}
+
 }
