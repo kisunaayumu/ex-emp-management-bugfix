@@ -52,4 +52,18 @@ public class EmployeeService {
 	public void update(Employee employee) {
 		employeeRepository.update(employee);
 	}
+
+	public List<Employee> findByNameContaining(String name) {
+		return employeeRepository.findByNameContaining(name);
+	}
+
+	public List<Employee> showList(int page, int size) {
+		int offset = (page - 1) * size;
+		return employeeRepository.findWithPagination(offset, size);
+	}
+
+	public int getTotalPages(int size) {
+        return employeeRepository.getTotalPages(size);
+    }
+
 }

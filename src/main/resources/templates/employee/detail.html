@@ -111,7 +111,7 @@
                   <tr>
                     <th nowrap>従業員名</th>
                     <td>
-                      <span th:utext="${employee.name}">山田花子</span>
+                      <span th:text="${employee.name}">山田花子</span>
                     </td>
                   </tr>
                   <tr>
@@ -126,19 +126,19 @@
                   <tr>
                     <th nowrap>性別</th>
                     <td>
-                      <span th:utext="${employee.gender}">女性</span>
+                      <span th:text="${employee.gender}">女性</span>
                     </td>
                   </tr>
                   <tr>
                     <th nowrap>入社日</th>
                     <td>
-                      <span th:utext="${#dates.format(employee.hireDate, 'yyyy年MM月dd日')}">2012/11/29</span>
+                      <span th:text="${#dates.format(employee.hireDate, 'yyyy年MM月dd日')}">2012/11/29</span>
                     </td>
                   </tr>
                   <tr>
                     <th nowrap>メールアドレス</th>
                     <td>
-                      <span th:utext="${employee.mailAddress}"
+                      <span th:text="${employee.mailAddress}"
                         >yamada@sample.com</span
                       >
                     </td>
@@ -146,13 +146,13 @@
                   <tr>
                     <th nowrap>郵便番号</th>
                     <td>
-                      <span th:utext="${employee.zipCode}">111-1111</span>
+                      <span th:text="${employee.zipCode}">111-1111</span>
                     </td>
                   </tr>
                   <tr>
                     <th nowrap>住所</th>
                     <td>
-                      <span th:utext="${employee.address}"
+                      <span th:text="${employee.address}"
                         >東京都新宿区1-1-1</span
                       >
                     </td>
@@ -160,7 +160,7 @@
                   <tr>
                     <th nowrap>電話番号</th>
                     <td>
-                      <span th:utext="${employee.telephone}"
+                      <span th:text="${employee.telephone}"
                         >090-0000-0000</span
                       >
                     </td>
@@ -168,13 +168,13 @@
                   <tr>
                     <th nowrap>給料</th>
                     <td>
-                      <span th:utext="${#numbers.formatDecimal(employee.salary, 0, 'COMMA', 0, 'POINT')} + '円'">400000円</span>
+                      <span th:text="${#numbers.formatDecimal(employee.salary, 0, 'COMMA', 0, 'POINT')} + '円'">400000円</span>
                     </td>
                   </tr>
                   <tr>
                     <th nowrap>特性</th>
                     <td>
-                      <span th:utext="${employee.characteristics}"
+                      <span th:text="${employee.characteristics}"
                         >明るく素直な性格です。リーダーシップを発揮します。新卒社員研修の時はグループ開発の時にリーダーを買ってでました。積極性も人間性も抜群です。周りに対する不満も聞いたことがありません。</span
                       >
                     </td>

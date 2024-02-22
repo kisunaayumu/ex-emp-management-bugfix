@@ -2,6 +2,7 @@ package com.example.controller;
 
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.domain.Employee;
 import com.example.form.UpdateEmployeeForm;
@@ -50,19 +53,55 @@ public class EmployeeController {
 	/////////////////////////////////////////////////////
 	/**
 	 * 従業員一覧画面を出力します.
-	 * 
+	 * ページング機能追加
 	 * @param model モデル
 	 * @return 従業員一覧画面
 	 */
 	@GetMapping("/showList")
-	public String showList(Model model){
-	List<Employee> employeeList = employeeService.showList();
-	model.addAttribute("employeeList", employeeList);
+	public String showList(@RequestParam(name = "page", defaultValue = "1") int page,@RequestParam(name = "size", defaultValue = "10") int size,Model model){
+    List<Employee> employeeList = employeeService.showList(page, size);
+    model.addAttribute("employeeList", employeeList);
 
-	String username = (String) session.getAttribute("username");
+	int totalPages = employeeService.getTotalPages(size);
+    model.addAttribute("currentPage", page);
+    model.addAttribute("totalPages", totalPages);
+
+    String username = (String) session.getAttribute("username");
     model.addAttribute("username", username);
-	return "employee/list";
+    return "employee/list";
 	}
+
+	//曖昧検索機能追加
+	/**
+	 * 従業員一覧画面を出力します.
+	 * 
+	 * @param model モデル
+	 * @return 従業員一覧画面
+	 */
+	@GetMapping("/search")
+	public String search(@RequestParam(required = false) String name, Model model) {
+    List<Employee> employees;
+    if (name == null || name.isEmpty()) {
+        employees = employeeService.showList();
+    } else {
+        employees = employeeService.findByNameContaining(name);
+        if (employees.isEmpty()) {
+            model.addAttribute("message", "1件もありませんでした");
+            employees = employeeService.showList();
+        }
+    }
+    model.addAttribute("employeeList", employees);
+    return "employee/list";
+	}
+
+	@GetMapping("/autocomplete")
+	@ResponseBody
+	public List<String> autocomplete(@RequestParam String term) {
+    // 名前に部分一致する従業員を検索し、その名前のリストを返す
+    return employeeService.findByNameContaining(term).stream()
+        .map(Employee::getName)
+        .collect(Collectors.toList());
+}
 
 	/////////////////////////////////////////////////////
 	// ユースケース：従業員詳細を表示する
