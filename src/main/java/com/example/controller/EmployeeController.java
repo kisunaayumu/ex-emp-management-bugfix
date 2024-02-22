@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.domain.Employee;
 import com.example.form.UpdateEmployeeForm;
@@ -63,6 +64,29 @@ public class EmployeeController {
     model.addAttribute("username", username);
 	return "employee/list";
 	}
+
+	//曖昧検索機能追加
+	/**
+	 * 従業員一覧画面を出力します.
+	 * 
+	 * @param model モデル
+	 * @return 従業員一覧画面
+	 */
+	@GetMapping("/search")
+	public String search(@RequestParam(required = false) String name, Model model) {
+    List<Employee> employees;
+    if (name == null || name.isEmpty()) {
+        employees = employeeService.showList();
+    } else {
+        employees = employeeService.findByNameContaining(name);
+        if (employees.isEmpty()) {
+            model.addAttribute("message", "1件もありませんでした");
+            employees = employeeService.showList();
+        }
+    }
+    model.addAttribute("employeeList", employees);
+    return "employee/list";
+}
 
 	/////////////////////////////////////////////////////
 	// ユースケース：従業員詳細を表示する

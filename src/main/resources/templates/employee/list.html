@@ -89,6 +89,15 @@
         </li>
       </ol>
 
+      <!-- 検索フォーム -->
+      <form th:action="@{/employee/search}" method="get">
+      <input type="text" name="name" placeholder="従業員名を入力">
+      <input type="submit" value="検索">
+      </form>
+
+      <!-- エラーメッセージ -->
+      <div th:if="${message}" th:text="${message}" style="color: red;"></div>
+
       <!-- table -->
       <div class="row">
         <div

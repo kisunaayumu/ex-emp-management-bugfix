@@ -9,7 +9,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
-
+import org.springframework.web.util.HtmlUtils;
 import com.example.domain.Employee;
 
 /**
@@ -83,4 +83,18 @@ public class EmployeeRepository {
 		String updateSql = "UPDATE employees SET dependents_count=:dependentsCount WHERE id=:id";
 		template.update(updateSql, param);
 	}
+
+	// 曖昧検索機能追加
+	public List<Employee> findByNameContaining(String name) {
+    // 入力のエスケープ
+    String escapedName = HtmlUtils.htmlEscape(name);
+
+    String sql = "SELECT id,name,image,gender,hire_date,mail_address,zip_code,address,telephone,salary,characteristics,dependents_count FROM employees WHERE name LIKE :name ORDER BY hire_date ASC";
+
+    SqlParameterSource param = new MapSqlParameterSource().addValue("name", "%" + escapedName + "%");
+
+    List<Employee> employees = template.query(sql, param, EMPLOYEE_ROW_MAPPER);
+
+    return employees;
+}
 }
