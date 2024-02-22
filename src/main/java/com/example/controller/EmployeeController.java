@@ -2,6 +2,7 @@ package com.example.controller;
 
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.domain.Employee;
 import com.example.form.UpdateEmployeeForm;
@@ -91,6 +93,15 @@ public class EmployeeController {
     model.addAttribute("employeeList", employees);
     return "employee/list";
 	}
+
+	@GetMapping("/autocomplete")
+	@ResponseBody
+	public List<String> autocomplete(@RequestParam String term) {
+    // 名前に部分一致する従業員を検索し、その名前のリストを返す
+    return employeeService.findByNameContaining(term).stream()
+        .map(Employee::getName)
+        .collect(Collectors.toList());
+}
 
 	/////////////////////////////////////////////////////
 	// ユースケース：従業員詳細を表示する

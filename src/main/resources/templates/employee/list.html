@@ -19,6 +19,9 @@
       href="../../static/css/style.css"
       th:href="@{/css/style.css}"
     />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -90,10 +93,19 @@
       </ol>
 
       <!-- 検索フォーム -->
-      <form th:action="@{/employee/search}" method="get">
-      <input type="text" name="name" placeholder="従業員名を入力">
+    <form th:action="@{/employee/search}" method="get">
+      <input id="search" type="text" name="name" placeholder="従業員名を入力">
       <input type="submit" value="検索">
-      </form>
+    </form>
+
+    <!-- Autocompleteの設定 -->
+    <script>
+    $( function() {
+      $( "#search" ).autocomplete({
+        source: "/employee/autocomplete"
+      });
+    } );
+    </script>
 
       <!-- エラーメッセージ -->
       <div th:if="${message}" th:text="${message}" style="color: red;"></div>
