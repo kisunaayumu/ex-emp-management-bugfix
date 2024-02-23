@@ -58,11 +58,20 @@ public class EmployeeController {
 	 * @return 従業員一覧画面
 	 */
 	@GetMapping("/showList")
-	public String showList(@RequestParam(name = "page", defaultValue = "1") int page,@RequestParam(name = "size", defaultValue = "10") int size,Model model){
-    List<Employee> employeeList = employeeService.showList(page, size);
+	public String showList(@RequestParam(name = "page", defaultValue = "1") int page,
+                       @RequestParam(name = "size", defaultValue = "10") int size,
+                       HttpSession session,
+                       Model model){
+    String searchQuery = (String) session.getAttribute("searchQuery");
+    List<Employee> employeeList;
+    if (searchQuery != null && !searchQuery.isEmpty()) {
+        employeeList = employeeService.findByNameContaining(searchQuery, page, size);
+    } else {
+        employeeList = employeeService.showList(page, size);
+    }
     model.addAttribute("employeeList", employeeList);
 
-	int totalPages = employeeService.getTotalPages(size);
+    int totalPages = employeeService.getTotalPages(size);
     model.addAttribute("currentPage", page);
     model.addAttribute("totalPages", totalPages);
 
@@ -79,18 +88,25 @@ public class EmployeeController {
 	 * @return 従業員一覧画面
 	 */
 	@GetMapping("/search")
-	public String search(@RequestParam(required = false) String name, Model model) {
+	public String search(@RequestParam(required = false, defaultValue = "") String name, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size, Model model, HttpSession session) {
     List<Employee> employees;
-    if (name == null || name.isEmpty()) {
-        employees = employeeService.showList();
+    if (name.isEmpty()) {
+        employees = employeeService.showList(page, size);
     } else {
-        employees = employeeService.findByNameContaining(name);
-        if (employees.isEmpty()) {
-            model.addAttribute("message", "1件もありませんでした");
-            employees = employeeService.showList();
-        }
+        employees = employeeService.findByNameContaining(name, page, size);
     }
+    
+    if (employees.isEmpty()) {
+        model.addAttribute("message", "1件もありませんでした");
+    }
+    
+    session.setAttribute("lastPage", page);
+    session.setAttribute("searchQuery", name);
     model.addAttribute("employeeList", employees);
+    model.addAttribute("currentPage", page);
+	model.addAttribute("totalPages", employeeService.getTotalPages(name,size));
+	
+	
     return "employee/list";
 	}
 
