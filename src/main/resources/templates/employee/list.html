@@ -147,20 +147,24 @@
             </tbody>
           </table>
 
-          <div class="row">
-            <div class="col-md-12 text-center">
-                <ul class="pagination">
-                    <li th:class="${currentPage != null && currentPage == 1} ? disabled : ''">
-                        <a th:href="@{/employee/showList(page=${currentPage != null ? currentPage - 1 : 0}, size=${size})}">前へ</a>
-                    </li>
-                    <li th:each="pageNumber : ${totalPages != null ? #numbers.sequence(1, totalPages) : #numbers.sequence(1, 1)}"
-                        th:class="${pageNumber == currentPage} ? active : ''">
-                        <a th:href="@{/employee/showList(page=${pageNumber}, size=${size})}" th:text="${pageNumber}"></a>
-                    </li>
-                    <li th:class="${currentPage != null && currentPage == totalPages} ? disabled : ''">
-                        <a th:href="@{/employee/showList(page=${currentPage != null ? currentPage + 1 : 0}, size=${size})}">次へ</a>
-                    </li>
-                </ul>
+          <div th:if="${not #lists.isEmpty(employeeList)}">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <ul class="pagination">
+                        <li th:class="${currentPage != null && currentPage == 1} ? 'disabled' : ''">
+                            <a th:if="${currentPage != null && currentPage > 1}" th:href="@{/employee/showList(page=${currentPage - 1}, size=${size})}">前へ</a>
+                            <span th:if="${currentPage == null || currentPage == 1}">前へ</span>
+                        </li>
+                        <li th:each="pageNumber : ${totalPages != null ? #numbers.sequence(1, totalPages) : #numbers.sequence(1, 1)}"
+                            th:class="${pageNumber == currentPage} ? 'active' : ''">
+                            <a th:href="@{/employee/showList(page=${pageNumber}, size=${size})}" th:text="${pageNumber}"></a>
+                        </li>
+                        <li th:class="${currentPage != null && currentPage == totalPages} ? 'disabled' : ''">
+                            <a th:if="${currentPage != null && currentPage < totalPages}" th:href="@{/employee/showList(page=${currentPage + 1}, size=${size})}">次へ</a>
+                            <span th:if="${currentPage == null || currentPage == totalPages}">次へ</span>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
 

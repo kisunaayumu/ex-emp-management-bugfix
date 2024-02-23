@@ -3,6 +3,7 @@ package com.example.repository;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -115,5 +116,38 @@ public class EmployeeRepository {
 		int totalEmployees = template.queryForObject(countSql, new MapSqlParameterSource(), Integer.class);
 		return (int) Math.ceil((double) totalEmployees / size);
 	}
+	public List<Employee> showList(int page, int size) {
+			String sql = "SELECT * FROM Employee ORDER BY id LIMIT :limit OFFSET :offset";
+			int offset = (page - 1) * size;
+
+			SqlParameterSource param = new MapSqlParameterSource()
+				.addValue("limit", size)
+				.addValue("offset", offset);
+
+			return template.query(sql, param, new BeanPropertyRowMapper<>(Employee.class));
+		}
+
+	// 曖昧検索とページング機能を組み合わせたメソッド
+	public List<Employee> findByNameContainingWithPagination(String name, int offset, int limit) {
+    // 入力のエスケープ
+    String escapedName = HtmlUtils.htmlEscape(name);
+
+    String sql = "SELECT id,name,image,gender,hire_date,mail_address,zip_code,address,telephone,salary,characteristics,dependents_count FROM employees WHERE name LIKE :name ORDER BY hire_date ASC LIMIT :limit OFFSET :offset";
+
+    SqlParameterSource param = new MapSqlParameterSource()
+        .addValue("name", "%" + escapedName + "%")
+        .addValue("limit", limit)
+        .addValue("offset", offset);
+
+    List<Employee> employees = template.query(sql, param, EMPLOYEE_ROW_MAPPER);
+
+    return employees;
+	}
+
+	public int getTotalPagesForName(String name, int size) {
+	long totalEmployees = findByNameContaining(name).size();
+	return (int) Math.ceil((double) totalEmployees / size);
+	}
+
 
 }

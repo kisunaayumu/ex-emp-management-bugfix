@@ -65,5 +65,17 @@ public class EmployeeService {
 	public int getTotalPages(int size) {
         return employeeRepository.getTotalPages(size);
     }
+	
+	public List<Employee> findByNameContaining(String name, int page, int size) {
+		int offset = (page - 1) * size;
+		return employeeRepository.findByNameContainingWithPagination(name, offset, size);
+	}
 
+	public int getTotalPages(String name, int size) {
+        if (name.isEmpty()) {
+            return employeeRepository.getTotalPages(size);
+        } else {
+            return employeeRepository.getTotalPagesForName(name, size);
+        }
+    }
 }
